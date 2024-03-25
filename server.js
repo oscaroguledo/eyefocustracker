@@ -1,50 +1,16 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 
-const server = http.createServer((req, res) => {
-    
+//express app
+const app = express();
 
-    //set header content type
-    res.setHeader('Content-Type', 'text/html');
-    let path= './views/';
-    switch(req.url){
-        case '/':
-            path += 'index.html';
-            res.statusCode = 200;
-            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
-            break;
-        case '/about':
-            path += 'about.html';
-            res.statusCode = 200;
-            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
-            break;
-        case '/about-us':
-            res.statusCode = 301;
-            res.setHeader('Location', '/about');
-            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
-            res.end();
-            break;
-        case '/contact':
-            path += 'contact.html';
-            res.statusCode = 200;
-            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
-            break;
-        default:
-            path += '404.html';
-            res.statusCode = 404;
-            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
-            break;
-    }
-    fs.readFile(path,(err, data) => {
-        if (err) throw err;
-        //res.write(data);
+//listen for requests
+app.listen(3000, () => {
+    console.log('listening on port 3000');
+});
 
-        res.end(data);
-    });
-    
-   
-})
-
-server.listen(3000,'localhost',()=>{
-    console.log('server is running on port 3000');
-})
+app.get('/', (req, res) => {
+    res.sendFile('./views/index.html' ,{root: __dirname});
+});
+app.get('/about', (req, res) => {
+    res.sendFile('./views/about.html',{root: __dirname});
+});
