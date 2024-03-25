@@ -2,10 +2,47 @@ const http = require('http');
 const fs = require('fs');
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello World\n');
-  console.log('request-made:', `'${req.url}', '${req.method}'`);
-  
+    
+
+    //set header content type
+    res.setHeader('Content-Type', 'text/html');
+    let path= './views/';
+    switch(req.url){
+        case '/':
+            path += 'index.html';
+            res.statusCode = 200;
+            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
+            break;
+        case '/about':
+            path += 'about.html';
+            res.statusCode = 200;
+            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
+            break;
+        case '/about-us':
+            res.statusCode = 301;
+            res.setHeader('Location', '/about');
+            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
+            res.end();
+            break;
+        case '/contact':
+            path += 'contact.html';
+            res.statusCode = 200;
+            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
+            break;
+        default:
+            path += '404.html';
+            res.statusCode = 404;
+            console.log('request-made:', `${req.url}, ${req.method},${res.statusCode}`);
+            break;
+    }
+    fs.readFile(path,(err, data) => {
+        if (err) throw err;
+        //res.write(data);
+
+        res.end(data);
+    });
+    
+   
 })
 
 server.listen(3000,'localhost',()=>{
