@@ -1,16 +1,17 @@
+// app.js
+
 const express = require('express');
+const screenshotsRouter = require('./routes/screenshots');
+const videosRouter = require('./routes/videos');
 
-//express app
 const app = express();
+const PORT = process.env.PORT || 3000;
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-//listen for requests
-app.listen(3000, () => {
-    console.log('listening on port 3000');
-});
+app.use('/api/screenshots', screenshotsRouter);
+app.use('/api/videos', videosRouter);
 
-app.get('/', (req, res) => {
-    res.sendFile('./views/index.html' ,{root: __dirname});
-});
-app.get('/about', (req, res) => {
-    res.sendFile('./views/about.html',{root: __dirname});
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
